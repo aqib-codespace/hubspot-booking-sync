@@ -1,0 +1,6 @@
+node_modules
+.env
+
+# Local scoreboard dumps — contain promoter email addresses
+test
+*.dump.json

@@ -1,0 +1,45 @@
+{
+  "name": "hubspot-booking-sync",
+  "version": "2.0.0",
+  "description": "Scheduled sync service that matches HubSpot records to Tourism HQ booking codes and batch-updates deposit_count with each code's pax count",
+  "type": "module",
+  "main": "src/main.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js",
+    "test": "node test-integration.js",
+    "test:tourism": "node --input-type=module -e \"import 'dotenv/config'; import axios from 'axios'; const url = process.env.TOURISM_HQ_API_URL ?? 'https://booking.tourismhq.com/api/scoreboard'; try { const { data } = await axios.get(url, { timeout: 10000 }); console.log(JSON.stringify(data, null, 2)); } catch (e) { console.error(e.response?.status ?? e.code, e.response?.data ?? e.message); process.exit(1); }\"",
+    "test:hubspot": "node --input-type=module -e \"import 'dotenv/config'; import axios from 'axios'; const base = process.env.HUBSPOT_API_URL ?? 'https://api.hubapi.com'; const id = process.env.HUBSPOT_OBJECT_ID; try { const { data } = await axios.get(base + '/crm/v3/objects/' + id, { headers: { Authorization: 'Bearer ' + process.env.HUBSPOT_ACCESS_TOKEN }, params: { limit: 5, properties: 'booking_code,deposit_count,manager_email' }, timeout: 10000 }); console.log(JSON.stringify(data, null, 2)); } catch (e) { console.error(e.response?.status ?? e.code, e.response?.data ?? e.message); process.exit(1); }\"",
+    "lint": "echo 'No linter configured — see README'",
+    "format": "echo 'No formatter configured — see README'"
+  },
+  "keywords": [
+    "crm",
+    "hubspot",
+    "tourismhq",
+    "integration",
+    "scheduler",
+    "cron"
+  ],
+  "author": "Muhammad Aqib",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.18.1",
+    "dotenv": "^17.4.2",
+    "node-cron": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/CRM-Hubspot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/CRM-Hubspot/issues"
+  },
+  "homepage": "https://github.com/yourusername/CRM-Hubspot#readme"
+}
